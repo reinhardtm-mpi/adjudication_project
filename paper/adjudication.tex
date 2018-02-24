@@ -113,7 +113,7 @@ We make the following assumptions:
 	\item This aformentioned mean again is spreaded for different adjudicators. It is openly recognized that different adjudicators award systematically higher  or lower points than others. 
 \end{enumerate}
 
-We assume the distribution of point 3. and 4. as Gaussian. This is justified through the Central Limit Theorem, that states that for a high number of parameters ..., the probability distribution always approaches a Gaussian. In OPD, five categories go into the total speaker points, while a large number of criteria, that is differently evaluated and weighted by each adjudicator, contributes to each category. 
+We assume the distribution of point 4. and 5. as Gaussian. This is justified through the Central Limit Theorem, that states that for a high number of parameters ..., the probability distribution always approaches a Gaussian. In OPD, five categories go into the total speaker points, while a large number of criteria, that is differently evaluated and weighted by each adjudicator, contributes to each category. 
 
 \section{Analytical Considerations}
 
@@ -195,26 +195,34 @@ For the adjudication space, this means a projection of $\Gamma_N \rightarrow \Ga
 
 \section{Numerical Validation}
 
-We here simulate a high number of finals (excluding independent speakers). 
+We here simulate a high number of finals (excluding independent speakers). It is the goal to compare the accuracy of the two aforementioned methods.
 \subsection{Single Speaker}
-It is the goal to obtain a probability distribution of the points a speaker would obtain given his true strength, and subsequently calculate the accuracy. The true value is assigned to 50. Procedure:
+ The true value is assigned to 50. Procedure:
 \begin{itemize}
-	\item Draw five values $\mu_i$ discrete values from a Gaussian distribution with mean 50 and standard deviation 2. These are the means of the adjudicators.
-	\item For each adjudicator, draw a value $x_i$ from a Gaussian distribution with mean $\mu_i$ and standard deviation $\sigma_i$. 
+	\item Draw five values $\mu_i$ discrete values from a Gaussian distribution with mean 50 and standard deviation $\sigma_s$. These are the means of the adjudicators.
+	\item For each adjudicator, draw a value $x_n$ from a Gaussian distribution with mean $\mu_n$ and standard deviation $\sigma_n$. 
+	\item Combine the points to $\bar{x}$ and calculate the squared deviation to the true value $\mu_{true}$.
+	\item Simulate a high number of finals and take the mean (and std) of the squared deviations. We thus obtain $<(\bar{x} - \mu_{true})^2>$
+	\item One time $\sigma_s$ is varied, another time, $\sigma_n$ is varied.
 \end{itemize}
 
+\begin{figure}[hbt!]
+	\includegraphics[width=\linewidth]{single_speaker_sigma_s_2_var_sigma_n}
+	\caption{Varying the standard deviation of the individual adjudicator $\sigma_n$ (assumed equal for each adjudicator). The average point level of each adjudicator is drawn from a distribution centered on $\mu_{true}=50$ and with $\sigma_s=2$. Dropping the highest and lowest points leads to a better result in all cases. 50,000 final simulations were conducted.}
+	\label{fig:single_speaker_vary_sigma_n}
+\end{figure}
+
+\begin{figure}[hbt!]
+	\includegraphics[width=\linewidth]{single_speaker_var_sigma_s_sigma_n_2}
+	\caption{Varying the standard deviation of the different point level of the adjudicators $\sigma_s$. The standard deviation of each individual adjudicator is kept constant at $\sigma_n = 2$. Dropping the highest and lowest points leads to a better result in all cases. 50,000 final simulations were conducted.}
+	\label{fig:single_speaker_vary_sigma_s}
+\end{figure}
 %Convoluted Gaussian
 
 \subsection{Team Win}
 
 Procedure:
-\begin{itemize}
-	\item Draw discrete values denoted by $\mu_i$ from a Gaussian distribution with mean 50 and standard deviation 2. These are the means of the adjudicators.
-	\item For each adjudicator, draw a value $x_i$ from a Gaussian distribution with mean $\mu_i$ and standard deviation $\sigma_i$. 
-	\item In one case, take the mean of $x_i$ as result, in case b), cross out the highest and the lowest ranking and calculate the result through the remaining three.
-	\item Repeat a high number of times
-	\item Calculate $<(correct - measured)^2>$. 
-\end{itemize}
+
 
 
 \section{Conclusion}

@@ -36,6 +36,7 @@ class adjudicator:
     def __init__(self, all_adj_std = all_adj_std_glob, ind_adj_std = ind_adj_std_glob, true_speaker_points = true_speaker_points_glob):
         self.all_adj_std  = all_adj_std
         self.ind_adj_std  = ind_adj_std
+        self.true_speaker_points = true_speaker_points
         self.__assign_point_level()     
 
     # 'Hochpunkter oder Tiefpunkter?'. Assign the point level of the adjudicator.
@@ -44,7 +45,7 @@ class adjudicator:
     # It is still possible that the point level of an adjudicator is not an integer
     # value
     def assign_point_level(self):
-        self.point_level = np.random.normal(loc=true_speaker_points, scale=self.all_adj_std)
+        self.point_level = np.random.normal(loc=self.true_speaker_points, scale=self.all_adj_std)
         
     __assign_point_level = assign_point_level
 
@@ -136,7 +137,7 @@ Red = rgb_to_hex((180, 90, 100)) #180 90 100
 Blue = rgb_to_hex((0, 130, 150)) #0 130 150
 
 def plot_result(par_arr, criteria_all, criteria_drop, title, img_fname):
-    fig = plt.figure(dpi = 100)
+    fig = plt.figure(dpi = 300)
     ax1 = fig.add_subplot(111)
 
 
@@ -166,20 +167,20 @@ def plot_result(par_arr, criteria_all, criteria_drop, title, img_fname):
 ################# Program ##################
 
 # Change the individual variance of each adjudicator
-ind_adj_std_arr = np.arange(0., 3., 0.1)
+all_adj_std_arr = np.arange(0., 3., 0.1)
 # first column: mean, second column: std of mean
-criteria_all    = np.zeros((len(ind_adj_std_arr),2))
-criteria_drop   = np.zeros((len(ind_adj_std_arr),2))
+criteria_all    = np.zeros((len(all_adj_std_arr),2))
+criteria_drop   = np.zeros((len(all_adj_std_arr),2))
 
 i = 0
-for ind_adj_std in ind_adj_std_arr:
+for all_adj_std in all_adj_std_arr:
     
     # Show progress of calculation
-    show_progress(i, len(ind_adj_std_arr))
+    show_progress(i, len(all_adj_std_arr))
     
     # Simulate finals
-    point_list_finals_all  = simulate_finals(drop_points = True,  ind_adj_std = ind_adj_std)
-    point_list_finals_drop = simulate_finals(drop_points = False, ind_adj_std = ind_adj_std)
+    point_list_finals_all  = simulate_finals(drop_points = True,  all_adj_std = all_adj_std)
+    point_list_finals_drop = simulate_finals(drop_points = False, all_adj_std = all_adj_std)
 
     # Get criteria
     mean_all,  std_all  = get_acc_criteria(point_list_finals_all)
@@ -190,6 +191,6 @@ for ind_adj_std in ind_adj_std_arr:
     
     i += 1
 
-title = 'Influence of Ind. Adj. Variance, $\sigma_s$=2'
-img_fname = 'single_speaker_sigma_s_2_var_sigma_n.png'
-plot_result(ind_adj_std_arr, criteria_all, criteria_drop, title, img_fname)
+title = 'Influence of Ind. Adj. Variance, $\sigma_n$=2'
+img_fname = 'single_speaker_var_sigma_s_sigma_n_2.png'
+plot_result(all_adj_std_arr, criteria_all, criteria_drop, title, img_fname)
